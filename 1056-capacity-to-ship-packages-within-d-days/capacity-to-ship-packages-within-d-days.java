@@ -4,31 +4,34 @@ class Solution {
         int e = 0;
 
         for(int weight : weights){
-            s = Math.max(s, weight);
+            s = Math.max(weight, s);
             e += weight;
         }
 
-        while(s <= e){
+        while(s < e){
             int mid = s + (e - s)/2;
 
-            int requiredDays = 1;
-            int currentWeight = 0;
-
-            for(int weight : weights){
-
-                if(currentWeight + weight > mid){
-                    requiredDays++;
-                    currentWeight = 0;
-                }
-                currentWeight += weight;
-            }
-
-            if(requiredDays <= days){
-                e = mid - 1;
+            if(canShip(weights, mid, days)){
+                e = mid;
             }else{
                 s = mid + 1;
             }
         }
         return s;
+    }
+
+    private boolean canShip(int[] weights, int capacity, int days){
+        int totalDays = 1;
+        int currentWeight = 0;
+
+        for(int weight : weights){
+            if(currentWeight + weight > capacity){
+                totalDays++;
+                currentWeight = weight;
+            }else{
+                currentWeight += weight;
+            }
+        }
+        return totalDays <= days;
     }
 }
